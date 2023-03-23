@@ -2,14 +2,14 @@
 
 public class GameHub : Hub
 {
-    public static string[] buttonsThatAreOccupied = new string[4];
+    public static string[] buttonsThatAreOccupied = new string[6];
     //public static int amountOfPlayersThatAreReady = 0;
 
-    public async Task TryPickAScreenSpot(string nameOfClient, String numberOfButton, string screenWidth, string screenHeight)
+    public async Task TryPickAScreenSpot(string nameOfClient, String numberOfButton)
     {
         int chosenButtonNumber;
-        double width = double.Parse(screenWidth);
-        double height = double.Parse(screenHeight);
+        //double width = double.Parse(screenWidth);
+        //double height = double.Parse(screenHeight);
 
         if (int.TryParse(numberOfButton, out chosenButtonNumber))
         {
@@ -22,7 +22,7 @@ public class GameHub : Hub
                 buttonsThatAreOccupied[chosenButtonNumber] = nameOfClient;
 
                 await Clients.All.SendAsync("PlacementUpdateRecevied", nameOfClient,
-                chosenButtonNumber, width, height);
+                chosenButtonNumber);
                 //amountOfPlayersThatAreReady++;
             }
 
@@ -50,6 +50,12 @@ public class GameHub : Hub
                 //amountOfPlayersThatAreReady--;
             }
         }
+    }
+
+    public async Task GetAmountOfPlayers()
+    {
+        int amountOfPlayers = 2;
+        await Clients.All.SendAsync("GetAmountOfPlayers", amountOfPlayers);
     }
 
     public async Task RequestScreenUpdate(string clientId)
