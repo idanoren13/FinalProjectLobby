@@ -45,16 +45,15 @@ public class GameHub : Hub
             if (buttonThatClientWantsToDeselect == nameOfClient)
             {
                 buttonsThatAreOccupied[chosenButtonNumber] = string.Empty;
-                await Clients.All.SendAsync("DeSelectPlacementUpdatReceived", nameOfClient,
+                await Clients.All.SendAsync("DeSelectPlacementUpdateReceived", nameOfClient,
                 chosenButtonNumber);
-                //amountOfPlayersThatAreReady--;
             }
         }
     }
 
     public async Task GetAmountOfPlayers()
     {
-        int amountOfPlayers = 2;
+        int amountOfPlayers = 3;
         await Clients.All.SendAsync("GetAmountOfPlayers", amountOfPlayers);
     }
 
@@ -69,6 +68,8 @@ public class GameHub : Hub
         buttonsThatAreOccupied[1] = string.Empty;
         buttonsThatAreOccupied[2] = string.Empty;
         buttonsThatAreOccupied[3] = string.Empty;
+        buttonsThatAreOccupied[4] = string.Empty;
+        buttonsThatAreOccupied[5] = string.Empty;
         await Clients.All.SendAsync("StartGame");
     }
 
