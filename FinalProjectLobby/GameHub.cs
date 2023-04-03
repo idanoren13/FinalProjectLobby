@@ -5,7 +5,7 @@ public class GameHub : Hub
     public static string[] buttonsThatAreOccupied = new string[6];
     //public static int amountOfPlayersThatAreReady = 0;
 
-    public async Task TryPickAScreenSpot(string nameOfClient, String numberOfButton)
+    public async Task TryPickAScreenSpot(string nameOfPlayer, String numberOfButton)
     {
         int chosenButtonNumber;
         //double width = double.Parse(screenWidth);
@@ -18,10 +18,10 @@ public class GameHub : Hub
             if (buttonsThatAreOccupied[chosenButtonNumber] == String.Empty
                 || buttonsThatAreOccupied[chosenButtonNumber] == null)
             {
-                //Client can pick the spot so we will update all of the clients
-                buttonsThatAreOccupied[chosenButtonNumber] = nameOfClient;
+                //Player can pick the spot so we will update all of the Players
+                buttonsThatAreOccupied[chosenButtonNumber] = nameOfPlayer;
 
-                await Clients.All.SendAsync("PlacementUpdateRecevied", nameOfClient,
+                await Clients.All.SendAsync("PlacementUpdateRecevied", nameOfPlayer,
                 chosenButtonNumber);
                 //amountOfPlayersThatAreReady++;
             }
@@ -33,8 +33,8 @@ public class GameHub : Hub
         }
     }
 
-    public async Task TryToDeselectScreenSpot(string nameOfClient, String numberOfpreviousChosenButton,
-        String buttonThatClientWantsToDeselect)
+    public async Task TryToDeselectScreenSpot(string nameOfPlayer, String numberOfpreviousChosenButton,
+        String buttonThatPlayerWantsToDeselect)
     {
         int chosenButtonNumber;
 
@@ -42,10 +42,10 @@ public class GameHub : Hub
         {
             chosenButtonNumber--;
 
-            if (buttonThatClientWantsToDeselect == nameOfClient)
+            if (buttonThatPlayerWantsToDeselect == nameOfPlayer)
             {
                 buttonsThatAreOccupied[chosenButtonNumber] = string.Empty;
-                await Clients.All.SendAsync("DeSelectPlacementUpdateReceived", nameOfClient,
+                await Clients.All.SendAsync("DeSelectPlacementUpdateReceived", nameOfPlayer,
                 chosenButtonNumber);
             }
         }
@@ -53,13 +53,13 @@ public class GameHub : Hub
 
     public async Task GetAmountOfPlayers()
     {
-        int amountOfPlayers = 3;
+        int amountOfPlayers = 4;
         await Clients.All.SendAsync("GetAmountOfPlayers", amountOfPlayers);
     }
 
-    public async Task RequestScreenUpdate(string clientId)
+    public async Task RequestScreenUpdate(string PlayerId)
     {
-        await Clients.Client(clientId).SendAsync("RecieveScreenUpdate", buttonsThatAreOccupied);
+        await Clients.Client(PlayerId).SendAsync("RecieveScreenUpdate", buttonsThatAreOccupied);
     }
 
     public async Task GameIsAboutToStart()
