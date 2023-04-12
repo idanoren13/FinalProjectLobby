@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using FinalProjectLobby;
+using Microsoft.AspNetCore.SignalR;
+using System.Drawing;
 
 public class GameHub : Hub
 {
-    public static string[] buttonsThatAreOccupied = new string[6];
-    //public static int amountOfPlayersThatAreReady = 0;
+    public static string[] buttonsThatAreOccupied = new string[4];
+    public static FinalProjectLobby.Size[] screenSize = new FinalProjectLobby.Size[4];
 
-    public async Task TryPickAScreenSpot(string nameOfPlayer, String numberOfButton)
+    public async Task TryPickAScreenSpot(string nameOfPlayer, String numberOfButton, FinalProjectLobby.Size i_ScreenSize)
     {
         int chosenButtonNumber;
-        //double width = double.Parse(screenWidth);
-        //double height = double.Parse(screenHeight);
 
         if (int.TryParse(numberOfButton, out chosenButtonNumber))
         {
@@ -20,16 +20,10 @@ public class GameHub : Hub
             {
                 //Player can pick the spot so we will update all of the Players
                 buttonsThatAreOccupied[chosenButtonNumber] = nameOfPlayer;
-
+                screenSize[chosenButtonNumber] = i_ScreenSize;
                 await Clients.All.SendAsync("PlacementUpdateRecevied", nameOfPlayer,
                 chosenButtonNumber);
-                //amountOfPlayersThatAreReady++;
             }
-
-            //if (amountOfPlayersThatAreReady >= 4)
-            //{
-            //    await Clients.All.SendAsync("GameIsAboutToStart");
-            //}
         }
     }
 
@@ -53,7 +47,7 @@ public class GameHub : Hub
 
     public async Task GetAmountOfPlayers()
     {
-        int amountOfPlayers = 4;
+        int amountOfPlayers = 2;
         await Clients.All.SendAsync("GetAmountOfPlayers", amountOfPlayers);
     }
 
@@ -64,13 +58,13 @@ public class GameHub : Hub
 
     public async Task GameIsAboutToStart()
     {
+        await Clients.All.SendAsync("StartGame", buttonsThatAreOccupied, screenSize);
         buttonsThatAreOccupied[0] = string.Empty;
         buttonsThatAreOccupied[1] = string.Empty;
         buttonsThatAreOccupied[2] = string.Empty;
         buttonsThatAreOccupied[3] = string.Empty;
         buttonsThatAreOccupied[4] = string.Empty;
         buttonsThatAreOccupied[5] = string.Empty;
-        await Clients.All.SendAsync("StartGame");
     }
 
 
