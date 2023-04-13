@@ -23,7 +23,7 @@ namespace FinalProjectLobby.Controllers
             RoomData? roomData = RoomsManager.Instance?.CreateNewRoom(roomCode);
             r_Logger.LogInformation($"Created room with the code: {roomCode}");
             
-            Debug.Assert(roomData != null, nameof(roomData) + " != null");
+            //Debug.Assert(roomData != null, nameof(roomData) + " != null");
             return roomData;
         }
 
