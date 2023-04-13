@@ -5,6 +5,7 @@
         private static RoomsManager? s_Instance = null;
         private static readonly object sr_Lock = new object();
         private readonly Dictionary<string, RoomData> r_Rooms = new Dictionary<string, RoomData>();
+        private string m_ServerIp; //for testing
 
         private RoomsManager()
         {
@@ -21,12 +22,17 @@
             }
         }
 
+        public void SetServerIp(string i_ServerIp)
+        {
+            this.m_ServerIp = i_ServerIp;
+        }
+
         public RoomData CreateNewRoom(string i_RoomCode)
         {
             r_Rooms.Add(i_RoomCode, new RoomData(i_RoomCode));
-            // TODO:
-            // deploy the room to the server as a container?
-            // return the server ip
+            // for testing
+            r_Rooms[i_RoomCode].ServerIp = m_ServerIp;
+
 
             return r_Rooms[i_RoomCode];
         }

@@ -42,5 +42,13 @@ namespace FinalProjectLobby.Controllers
             return Ok(messageOrIP);
         }
 
+        //testing
+        [HttpPost("setroomip")]
+        public IActionResult Post([FromBody] string roomip)
+        {
+            RoomsManager.Instance?.SetServerIp(roomip);
+            return Ok();
+        }
+
     }
 }
