@@ -6,6 +6,7 @@
         public string ServerIp { get; set; }
         public List<string> m_Players = new List<string>();
         public string? m_ChosenGame = null;
+        public bool m_HostLeft = false;
 
         public RoomData(string i_RoomCode)
         {
@@ -41,6 +42,16 @@
         public void SetGame(string i_Game)
         {
             m_ChosenGame = i_Game;
+        }
+
+        public void MarkHostLeft()
+        {
+            m_HostLeft = true;
+        }
+
+        public bool CheckIfHostLeft()
+        {
+            return m_HostLeft;
         }
     }
 }
