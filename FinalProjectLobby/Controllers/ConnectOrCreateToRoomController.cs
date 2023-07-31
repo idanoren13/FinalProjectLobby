@@ -37,10 +37,15 @@ namespace FinalProjectLobby.Controllers
         {
             r_Logger.LogInformation($"Trying to join room with the code: {i_RoomCode}");
             string? messageOrIP = RoomsManager.Instance?.JoinRoom(i_RoomCode);
-            if(messageOrIP == Messages.CannotJoinRoom || messageOrIP == null )
+            if (messageOrIP == Messages.CannotJoinRoom || messageOrIP == null)
             {
                 r_Logger.LogInformation($"Failed to join room with the code: {i_RoomCode}");
                 return StatusCode(StatusCodes.Status404NotFound);
+            }
+            else if (messageOrIP == Messages.FullCapacity)
+            {
+                r_Logger.LogInformation($"Failed to join room with the code: {i_RoomCode}, the room is full");
+                return StatusCode(StatusCodes.Status409Conflict);
             }
 
             r_Logger.LogInformation($"Joined room with the code: {i_RoomCode}");
@@ -136,7 +141,7 @@ namespace FinalProjectLobby.Controllers
 
             if (code != null && playerToRemove != null)
             {
-                bool? removedPlayer = RoomsManager.Instance?.RemovePlayer(code, playerToRemove);
+                bool? removedPlayer = RoomsManager.Instance?.PlayerLeft(code, playerToRemove);
 
                 if (removedPlayer != null && removedPlayer == true)
                 {
@@ -169,6 +174,27 @@ namespace FinalProjectLobby.Controllers
                 r_Logger.LogInformation($"the room with the code {roomCode} chose the game {gameName}.");
                 RoomsManager.Instance?.SetChosenGame(roomCode, gameName);
             }
+        }
+
+        [HttpPost("/HostLeft")]
+        public void HostLeft([FromBody] string i_RoomCode)
+        {
+            r_Logger.LogInformation($"the host of the room {i_RoomCode} left.");
+            RoomsManager.Instance?.MarkHostLeft(i_RoomCode);
+        }
+        
+        [HttpPost("/CheckHostLeft")]
+        public bool CheckIfHostLeft([FromBody] string i_RoomCode)
+        {
+            bool? hostLeft = RoomsManager.Instance?.CheckIfHostLeft(i_RoomCode);
+            bool res;
+
+            if (hostLeft == null)
+                res = false;
+            else
+                res = hostLeft.Value;
+
+            return res;
         }
 
         private string? getStringAttributeFromJson(JsonElement i_Data, string attrName)

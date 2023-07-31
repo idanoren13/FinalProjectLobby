@@ -6,6 +6,7 @@
         private static readonly object sr_Lock = new object();
         private readonly Dictionary<string, RoomData> r_Rooms = new Dictionary<string, RoomData>();
         private Dictionary<string, List<string>> m_RemovedPlayers = new Dictionary<string, List<string>>();
+        private const int k_MaxPlayersAmount = 4;
 
         private RoomsManager()
         {
@@ -39,6 +40,15 @@
 
         public string JoinRoom(string i_RoomCode)
         {
+            if (r_Rooms.ContainsKey(i_RoomCode))
+            {
+                RoomData room = r_Rooms[i_RoomCode];
+                if (room.m_Players.Count == k_MaxPlayersAmount)
+                {
+                    return Messages.FullCapacity;
+                }
+            }
+
             return r_Rooms.ContainsKey(i_RoomCode) ? r_Rooms[i_RoomCode].ServerIp : Messages.CannotJoinRoom;
         }
 
@@ -60,11 +70,15 @@
             return result;
         }
 
-        public List<string> GetPlayersList(string i_Code)
+        public List<string>? GetPlayersList(string i_Code)
         {
-            RoomData room = r_Rooms[i_Code];
+            if (r_Rooms.ContainsKey(i_Code))
+            {
+                RoomData room = r_Rooms[i_Code];
+                return room.GetPlayersList();
+            }
 
-            return room.GetPlayersList();
+            return null;
         }
 
         public bool RemovePlayer(string i_RoomCode, string i_PlayerToRemove)
@@ -86,24 +100,60 @@
             return result;
         }
 
+        public bool PlayerLeft(string i_RoomCode, string i_PlayerToRemove)
+        {
+            RoomData room = r_Rooms[i_RoomCode];
+            bool result;
+
+            if (room.CheckIfNameExist(i_PlayerToRemove))
+            {
+                room.RemovePlayer(i_PlayerToRemove);
+                result = true;
+            }
+            else
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
         public void ClearRemovedPlayers(string i_RoomCode)
         {
-            m_RemovedPlayers[i_RoomCode].Clear();
+            if (m_RemovedPlayers.ContainsKey(i_RoomCode))
+                m_RemovedPlayers[i_RoomCode].Clear();
         }
 
         public List<string>? GetPlayersToRemove(string i_RoomCode)
         {
-            return m_RemovedPlayers[i_RoomCode];
+            if (m_RemovedPlayers.ContainsKey(i_RoomCode))
+                return m_RemovedPlayers[i_RoomCode];
+            return null;
         }
 
         public string? GetChosenGame(string i_RoomCode)
         {
-            return r_Rooms[i_RoomCode].GetGame();
+            if (r_Rooms.ContainsKey(i_RoomCode))
+                return r_Rooms[i_RoomCode].GetGame();
+            return null;
         }
 
         public void SetChosenGame(string i_RoomCode, string i_GameName)
         {
             r_Rooms[i_RoomCode].SetGame(i_GameName);
+        }
+
+        public void MarkHostLeft(string i_RoomCode)
+        {
+            r_Rooms[i_RoomCode].MarkHostLeft();
+        }
+
+        public bool CheckIfHostLeft(string i_RoomCode)
+        {
+            if (r_Rooms.ContainsKey(i_RoomCode))
+                return r_Rooms[i_RoomCode].CheckIfHostLeft();
+
+            return false;
         }
 
     }
