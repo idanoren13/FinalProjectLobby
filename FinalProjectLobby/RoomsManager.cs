@@ -156,5 +156,18 @@
             return false;
         }
 
+        public void UpdateGoToNextPage(string i_RoomCode)
+        {
+            r_Rooms[i_RoomCode].MarkAsNeedToGoToNextPage();
+        }
+
+        public bool CheckIfNeedToGoToNextPage(string i_RoomCode)
+        {
+            if (r_Rooms.ContainsKey(i_RoomCode))
+                return r_Rooms[i_RoomCode].CheckIfNeedToGoToNextPage();
+
+            return false;
+        }
+
     }
 }

@@ -197,6 +197,27 @@ namespace FinalProjectLobby.Controllers
             return res;
         }
 
+        [HttpPost("/UpdateGoToNextPage")]
+        public void UpdateGoToNextPage([FromBody] string i_RoomCode)
+        {
+            r_Logger.LogInformation($"room {i_RoomCode} going to next page.");
+            RoomsManager.Instance?.UpdateGoToNextPage(i_RoomCode);
+        }
+
+        [HttpPost("/CheckIfGoToNextPage")]
+        public bool CheckIfNeedToGoToNextPage([FromBody] string i_RoomCode)
+        {
+            bool? answer = RoomsManager.Instance?.CheckIfNeedToGoToNextPage(i_RoomCode);
+            bool res;
+
+            if (answer == null)
+                res = false;
+            else
+                res = answer.Value;
+
+            return res;
+        }
+
         private string? getStringAttributeFromJson(JsonElement i_Data, string attrName)
         {
             string? attr = null;

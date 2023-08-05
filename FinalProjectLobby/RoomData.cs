@@ -7,6 +7,7 @@
         public List<string> m_Players = new List<string>();
         public string? m_ChosenGame = null;
         public bool m_HostLeft = false;
+        public bool m_NeedToGoToNextPage = false;
 
         public RoomData(string i_RoomCode)
         {
@@ -52,6 +53,16 @@
         public bool CheckIfHostLeft()
         {
             return m_HostLeft;
+        }
+
+        public void MarkAsNeedToGoToNextPage()
+        {
+            m_NeedToGoToNextPage = true;
+        }
+
+        public bool CheckIfNeedToGoToNextPage()
+        {
+            return m_NeedToGoToNextPage;
         }
     }
 }
