@@ -169,5 +169,10 @@
             return false;
         }
 
+        public void ResetRoomData(string i_RoomCode)
+        {
+            r_Rooms[i_RoomCode].ResetRoomData();
+        }
+
     }
 }

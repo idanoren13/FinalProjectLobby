@@ -64,5 +64,12 @@
         {
             return m_NeedToGoToNextPage;
         }
+
+        public void ResetRoomData()
+        {
+            m_HostLeft = false;
+            m_NeedToGoToNextPage = false;
+            m_ChosenGame = null;
+        }
     }
 }

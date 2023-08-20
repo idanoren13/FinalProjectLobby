@@ -218,6 +218,13 @@ namespace FinalProjectLobby.Controllers
             return res;
         }
 
+        [HttpPost("/ResetRoomData")]
+        public void ResetRoomData([FromBody] string i_RoomCode)
+        {
+            r_Logger.LogInformation($"reseting data for room {i_RoomCode}.");
+            RoomsManager.Instance?.ResetRoomData(i_RoomCode);
+        }
+
         private string? getStringAttributeFromJson(JsonElement i_Data, string attrName)
         {
             string? attr = null;
