@@ -58,7 +58,7 @@ namespace DeployServer
 
         private void activateContainer(ContainerData i_Container)
         {
-            string runDocker = $"docker run -d -p {i_Container.Port}:{Utils.TARGE_TPORT} {Utils.DOCKER_IMAGE_NAME}";
+            string runDocker = $"run -d -p {i_Container.Port}:{Utils.TARGE_TPORT} {Utils.DOCKER_IMAGE_NAME}";
             ProcessStartInfo processStartInfo = new ProcessStartInfo()
             {
                 FileName = "docker",
@@ -66,7 +66,6 @@ namespace DeployServer
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
-                CreateNoWindow = true
             };
 
 
@@ -100,9 +99,9 @@ namespace DeployServer
             i_Container.ContainerID = getContainerID();
         }
 
-        private int getContainerID()
+        private string getContainerID()
         {
-            int containerID = -1;
+            string containerID = string.Empty;
             using (Process process = new Process())
             {
                 process.StartInfo = new ProcessStartInfo()
@@ -119,7 +118,7 @@ namespace DeployServer
                     {
                         if (!string.IsNullOrEmpty(e.Data))
                         {
-                            containerID = int.Parse(e.Data);
+                            containerID = e.Data;
                         }
                     };
                 process.Start();

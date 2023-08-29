@@ -6,5 +6,5 @@ public class ContainerData
     public string RoomCode { get; init; }
     public bool IsRunning { get; set; } = false;
 
-    public int ContainerID { get; set; } = -1;
+    public string ContainerID { get; set; }
 }
