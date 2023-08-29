@@ -33,7 +33,16 @@ namespace DeployServer
             }
         }
 
-        public int AddContainer(string i_ContainerName)
+        /// <summary>
+        /// deploy a container of the game room
+        /// </summary>
+        /// <param name="i_RoomCode">
+        /// The room code identifier
+        /// </param>
+        /// <returns>
+        /// The port the container is connected to 
+        /// </returns>
+        public int AddContainer(string i_RoomCode)
         {
             int port = m_Random.Next(Utils.MIN_PORT, Utils.MAX_PORT);
             while (m_Containers.ContainsKey(port))
@@ -41,7 +50,7 @@ namespace DeployServer
                 port = m_Random.Next(Utils.MIN_PORT, Utils.MAX_PORT);
             }
 
-            m_Containers.Add(port, new ContainerData() { Name = i_ContainerName, Port = port });
+            m_Containers.Add(port, new ContainerData() { RoomCode = i_RoomCode, Port = port });
             activateContainer(m_Containers[port]);
 
             return m_Containers[port].IsRunning ? port : Utils.CONTAINER_DIDNOT_ACTIVATED;

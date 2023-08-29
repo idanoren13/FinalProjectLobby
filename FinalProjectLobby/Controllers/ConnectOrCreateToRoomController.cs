@@ -32,6 +32,17 @@ namespace FinalProjectLobby.Controllers
             return roomData;
         }
 
+        [HttpPost("/TestDeployRoom")]
+        public RoomData testDeployRoom()
+        {
+            string roomCode = Guid.NewGuid().ToString()[..6];
+            RoomData? roomData = RoomsManager.Instance?.CreateNewRoom(roomCode, "test_host_name");
+            r_Logger.LogInformation($"Created room with the code: {roomCode}");
+
+            Debug.Assert(roomData != null, nameof(roomData) + " != null");
+            return roomData;
+        }
+
         [HttpPut("/JoinRoom")]
         public IActionResult JoinRoomWithCode([FromBody] string i_RoomCode)
         {

@@ -1,4 +1,5 @@
-﻿namespace FinalProjectLobby
+﻿using DeployServer;
+namespace FinalProjectLobby
 {
     public class RoomsManager
     {
@@ -7,6 +8,8 @@
         private readonly Dictionary<string, RoomData> r_Rooms = new Dictionary<string, RoomData>();
         private Dictionary<string, List<string>> m_RemovedPlayers = new Dictionary<string, List<string>>();
         private const int k_MaxPlayersAmount = 4;
+        private DeploymentManager m_DeploymentManager = DeploymentManager.Instance;
+        private const string k_ServerAddress = "http://127.0.0.1:";
 
         private RoomsManager()
         {
@@ -34,6 +37,8 @@
             // TODO:
             // deploy the room to the server as a container?
             // return the server ip
+
+            r_Rooms[i_RoomCode].ServerIp =k_ServerAddress + m_DeploymentManager.AddContainer(i_RoomCode);
 
             return r_Rooms[i_RoomCode];
         }
