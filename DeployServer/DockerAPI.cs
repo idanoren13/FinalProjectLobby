@@ -7,7 +7,8 @@ namespace DeployServer;
 public class DockerApi
 {
     private DockerClient m_Client = new DockerClientConfiguration(
-            new Uri("unix:///var/run/docker.sock"))
+            //new Uri("unix:///var/run/docker.sock"))
+        )
         .CreateClient();
 
     public async Task<string> CreateAndStartContianer(int i_HostPort)

@@ -44,7 +44,7 @@ namespace FinalProjectLobby.Controllers
         }
 
         [HttpGet("/GetServerAddress")]
-        public string? GetServerAddress([FromBody] string i_RoomCode)
+        public string? GetServerAddress([FromQuery] string i_RoomCode)
         {
             return RoomsManager.Instance.GetServerAddress(i_RoomCode);
         }
