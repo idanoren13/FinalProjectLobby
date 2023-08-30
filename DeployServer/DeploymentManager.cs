@@ -12,6 +12,7 @@ namespace DeployServer
 
         private readonly Dictionary<int, ContainerData> m_Containers = new();
         private readonly Random m_Random = new Random();
+        private DockerApi m_DockerApi = new DockerApi();
 
         private DeploymentManager()
         {
@@ -42,7 +43,7 @@ namespace DeployServer
         /// <returns>
         /// The port the container is connected to 
         /// </returns>
-        public int AddContainer(string i_RoomCode)
+        public async Task<int> AddContainer(string i_RoomCode)
         {
             int port = m_Random.Next(Utils.MIN_PORT, Utils.MAX_PORT);
             while (m_Containers.ContainsKey(port))
@@ -51,14 +52,15 @@ namespace DeployServer
             }
 
             m_Containers.Add(port, new ContainerData() { RoomCode = i_RoomCode, Port = port });
-            activateContainer(m_Containers[port]);
+            //activateContainer(m_Containers[port]);
+            m_Containers[port].ContainerID = await m_DockerApi.CreateAndStartContianer(port);
 
             return m_Containers[port].IsRunning ? port : Utils.CONTAINER_DIDNOT_ACTIVATED;
         }
 
         private void activateContainer(ContainerData i_Container)
         {
-            string runDocker = $"run -d -p {i_Container.Port}:{Utils.TARGE_TPORT} {Utils.DOCKER_IMAGE_NAME}";
+            string runDocker = $"run -d -p {i_Container.Port}:{Utils.TARGET_PORT} {Utils.DOCKER_IMAGE_NAME}";
             ProcessStartInfo processStartInfo = new ProcessStartInfo()
             {
                 FileName = "docker",
