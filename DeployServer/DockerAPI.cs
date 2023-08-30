@@ -31,4 +31,9 @@ public class DockerApi
 
         return response.ID;
     }
+
+    public async Task<bool> StopContainer(string i_ContainerId)
+    {
+        return await m_Client.Containers.StopContainerAsync(i_ContainerId, new ContainerStopParameters());
+    }
 }

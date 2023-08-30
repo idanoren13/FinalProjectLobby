@@ -9,7 +9,7 @@ namespace FinalProjectLobby
         private Dictionary<string, List<string>> m_RemovedPlayers = new Dictionary<string, List<string>>();
         private const int k_MaxPlayersAmount = 4;
         private DeploymentManager m_DeploymentManager = DeploymentManager.Instance;
-        private const string k_ServerAddress = "http://127.0.0.1:";
+        private const string k_ServerAddress = "http://192.116.98.113:";
 
         private RoomsManager()
         {
@@ -19,26 +19,22 @@ namespace FinalProjectLobby
         {
             get
             {
-                lock(sr_Lock)
+                lock (sr_Lock)
                 {
                     return s_Instance ??= new RoomsManager();
                 }
             }
         }
 
-        public RoomData CreateNewRoom(string i_RoomCode, string i_HostName)
+        public async Task<RoomData> CreateNewRoom(string i_RoomCode, string i_HostName)
         {
             RoomData roomData = new RoomData(i_RoomCode);
 
             roomData.AddPlayer(i_HostName);
             r_Rooms.Add(i_RoomCode, roomData);
             m_RemovedPlayers[i_RoomCode] = new List<string>();
-            //r_Rooms.Add(i_RoomCode, new RoomData(i_RoomCode));
-            // TODO:
-            // deploy the room to the server as a container?
-            // return the server ip
 
-            r_Rooms[i_RoomCode].ServerIp =k_ServerAddress + m_DeploymentManager.AddContainer(i_RoomCode);
+            r_Rooms[i_RoomCode].ServerIp = k_ServerAddress + await m_DeploymentManager.AddContainer(i_RoomCode);
 
             return r_Rooms[i_RoomCode];
         }
@@ -77,13 +73,7 @@ namespace FinalProjectLobby
 
         public List<string>? GetPlayersList(string i_Code)
         {
-            if (r_Rooms.ContainsKey(i_Code))
-            {
-                RoomData room = r_Rooms[i_Code];
-                return room.GetPlayersList();
-            }
-
-            return null;
+            return r_Rooms.ContainsKey(i_Code) ? r_Rooms[i_Code].GetPlayersList() : null;
         }
 
         public bool RemovePlayer(string i_RoomCode, string i_PlayerToRemove)

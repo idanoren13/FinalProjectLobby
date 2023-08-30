@@ -20,23 +20,23 @@ namespace FinalProjectLobby.Controllers
             r_Logger = i_Logger;
         }
 
-        //add get http that creates a room with a generated code and returns it to the client
+
         [HttpPost("/CreateNewRoom")]
-        public RoomData CreateNewRoom([FromBody] string i_HostName)
+        public async Task<RoomData> CreateNewRoom([FromBody] string i_HostName)
         {
             string roomCode = Guid.NewGuid().ToString()[..6];
-            RoomData? roomData = RoomsManager.Instance?.CreateNewRoom(roomCode, i_HostName);
+            RoomData? roomData = await RoomsManager.Instance?.CreateNewRoom(roomCode, i_HostName);
             r_Logger.LogInformation($"Created room with the code: {roomCode}");
-            
+
             Debug.Assert(roomData != null, nameof(roomData) + " != null");
             return roomData;
         }
 
         [HttpPost("/TestDeployRoom")]
-        public RoomData testDeployRoom()
+        public async Task<RoomData> testDeployRoom()
         {
             string roomCode = Guid.NewGuid().ToString()[..6];
-            RoomData? roomData = RoomsManager.Instance?.CreateNewRoom(roomCode, "test_host_name");
+            RoomData? roomData = await RoomsManager.Instance?.CreateNewRoom(roomCode, "test_host_name");
             r_Logger.LogInformation($"Created room with the code: {roomCode}");
 
             Debug.Assert(roomData != null, nameof(roomData) + " != null");
@@ -193,7 +193,7 @@ namespace FinalProjectLobby.Controllers
             r_Logger.LogInformation($"the host of the room {i_RoomCode} left.");
             RoomsManager.Instance?.MarkHostLeft(i_RoomCode);
         }
-        
+
         [HttpPost("/CheckHostLeft")]
         public bool CheckIfHostLeft([FromBody] string i_RoomCode)
         {
