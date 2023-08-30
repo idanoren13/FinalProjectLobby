@@ -169,5 +169,9 @@ namespace FinalProjectLobby
             r_Rooms[i_RoomCode].ResetRoomData();
         }
 
+        public string? GetServerAddress(string i_RoomCode)
+        {
+            return r_Rooms[i_RoomCode].ServerIp;
+        }
     }
 }

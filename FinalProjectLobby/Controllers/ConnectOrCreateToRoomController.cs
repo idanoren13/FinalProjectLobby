@@ -43,6 +43,12 @@ namespace FinalProjectLobby.Controllers
             return roomData;
         }
 
+        [HttpGet("/GetServerAddress")]
+        public string? GetServerAddress([FromBody] string i_RoomCode)
+        {
+            return RoomsManager.Instance.GetServerAddress(i_RoomCode);
+        }
+
         [HttpPut("/JoinRoom")]
         public IActionResult JoinRoomWithCode([FromBody] string i_RoomCode)
         {
